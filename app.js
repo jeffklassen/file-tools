@@ -4,12 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');;
 var bodyParser = require('body-parser');
 var colors = require('colors');
+var fileUpload = require('express-fileupload');
 
 console.log('Starting server'.yellow);
 
 
 
 var app = express();
+app.use(fileUpload());
+
 var routes = require('./routes/api');
 //app.use(logger('dev'));
 console.log('Setting parsers'.gray);

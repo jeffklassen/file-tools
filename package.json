@@ -1,5 +1,5 @@
 {
-  "name": "secsync",
+  "name": "file-tools-server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,8 +10,10 @@
     "colors": "^1.1.2",
     "debug": "^2.2.0",
     "express": "^4.14.0",
+    "express-fileupload": "0.0.5",
     "lodash": "^4.16.4",
     "morgan": "^1.7.0",
+    "node-tesseract": "^0.2.7",
     "promise": "^7.1.1",
     "serve-favicon": "^2.3.0"
   }
