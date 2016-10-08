@@ -21,24 +21,6 @@ router.post('/ocr', function (req, res, next) {
     }
 
     sampleFile = req.files.sampleFile;
-    /*
-    sampleFile.mv('/tmp/filename.pdf', function (err) {
-        if (err) {
-            res.status(500).send(err);
-        }
-        else {
-            tesseract.process('/tmp/filename.pdf', function (err, text) {
-                if (err) {
-                    console.error(err);
-                    res.status(500).send(err);
-                } else {
-                    console.log(text);
-                    res.send(text);
-                }
-            });
-
-        }
-    });*/
 
     var filemv = Promise.denodeify(sampleFile.mv);
     var tmpfilename = '/tmp/filename.pdf';
