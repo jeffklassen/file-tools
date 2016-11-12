@@ -28,7 +28,7 @@ app.use('/', routes);
 console.log('Registering error handlers'.gray);
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
-    console.red(req);
+    console.log(req);
     err.status = 404;
     next(err);
 });
