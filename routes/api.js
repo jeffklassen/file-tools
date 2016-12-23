@@ -28,81 +28,87 @@ router.post('/ocr', function (req, res) {
 
     sampleFile = req.files.ocrFile;
 
-    sampleFile.mv = Promise.denodeify(sampleFile.mv);
-    var docUUID = uuid.v4();
-    var tmpfilename = '/tmp/' + docUUID + '.pdf';
+    if (!sampleFile) {
+
+        res.status(500).send('You need to post a file called ocrFile');
+    }
+    else {
+        sampleFile.mv = Promise.denodeify(sampleFile.mv);
+        var docUUID = uuid.v4();
+        var tmpfilename = '/tmp/' + docUUID + '.pdf';
 
 
-    console.log(tesseract.process);
+        console.log(tesseract.process);
 
-    sampleFile.mv(tmpfilename)
-        .then(() => {
-            var options = {};
-            options.convertOptions = {};
-            options.convertOptions['-quality'] = '100';
-            options.convertOptions['-density'] = '150';
+        sampleFile.mv(tmpfilename)
+            .then(() => {
+                var options = {};
+                options.convertOptions = {};
+                options.convertOptions['-quality'] = '100';
+                options.convertOptions['-density'] = '150';
 
-            var pdfImage = new PDFImage(tmpfilename, options);
+                var pdfImage = new PDFImage(tmpfilename, options);
 
-            return Promise.all([pdfImage, pdfImage.numberOfPages()]);
+                return Promise.all([pdfImage, pdfImage.numberOfPages()]);
 
-        })
-        .then(data => {
-            var pdfImage = data[0];
-            var numberOfPages = data[1];
+            })
+            .then(data => {
+                var pdfImage = data[0];
+                var numberOfPages = data[1];
 
-            // convert all pdfPages to images. Set the pdfImage as the context.
-            return Promise.all(
-                _.map(
-                    _.range(numberOfPages), pageNum => (
-                        pdfImage.convertPage(pageNum)
-                            .then(data => {
-                                console.log('dataaaaaa', data);
-                                return data;
-                            })
-                    ), pdfImage));
+                // convert all pdfPages to images. Set the pdfImage as the context.
+                return Promise.all(
+                    _.map(
+                        _.range(numberOfPages), pageNum => (
+                            pdfImage.convertPage(pageNum)
+                                .then(data => {
+                                    console.log('dataaaaaa', data);
+                                    return data;
+                                })
+                        ), pdfImage));
 
-        })
-        .then(filenames => {
-            console.log('DATA', filenames);
+            })
+            .then(filenames => {
+                console.log('DATA', filenames);
 
-            // process all converted files
-            return Promise.all(filenames.map(filename => {
-                console.log('calling tess', filename);
-                return tesseract.process(filename)
-                    .then(text => {
-                        return text.trim();
+                // process all converted files
+                return Promise.all(filenames.map(filename => {
+                    console.log('calling tess', filename);
+                    return tesseract.process(filename)
+                        .then(text => {
+                            return text.trim();
+                        })
+                        .catch(err => {
+                            console.log('ERRRROR', err);
+                        });
+                }));
+            })
+            .then(text => {
+                console.log('translated text', text);
+                res.send(text.join(''));
+            })
+            .catch(err => {
+                //catch errors
+                console.error('error in last catch block', err);
+                res.status(500).send(err);
+            })
+            .finally(() => {
+                var unlink = Promise.denodeify(fs.unlink);
+                glob('/tmp/' + docUUID + '*')
+                    .then(files => {
+                        console.log('DELETEING FILES', files);
+                        return Promise.all(_.map(files, file => {
+                            return unlink(file);
+                        }));
                     })
-                    .catch(err => {
-                        console.log('ERRRROR', err);
+                    .then(files => {
+                        console.log('DELETED', files);
+                    })
+                    .catch((err, files) => {
+                        console.log('ERROR REMOVING FILES', err, files);
                     });
-            }));
-        })
-        .then(text => {
-            console.log('translated text', text);
-            res.send(text.join(''));
-        })
-        .catch(err => {
-            //catch errors
-            console.error('error in last catch block', err);
-            res.status(500).send(err);
-        })
-        .finally(() => {
-            var unlink = Promise.denodeify(fs.unlink);
-            glob('/tmp/' + docUUID + '*')
-                .then(files => {
-                    console.log('DELETEING FILES', files);
-                    return Promise.all(_.map(files, file => {
-                        return unlink(file);
-                    }));
-                })
-                .then(files => {
-                    console.log('DELETED', files);
-                })
-                .catch((err, files) => {
-                    console.log('ERROR REMOVING FILES', err, files);
-                });
-        });
+            });
+    }
 });
 
 
