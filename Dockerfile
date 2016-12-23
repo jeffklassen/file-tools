@@ -1,10 +1,16 @@
 FROM node
 
-EXPOSE 3000
+## Uncomment the following line if you want to expose ports
+#EXPOSE 3000 
 
-RUN apt update && apt install tesseract-ocr imagemagick ghostscript poppler-utils  -y
 WORKDIR /app
-ADD . /app
+
+RUN npm install -g babel-cli && npm install -g babel-preset-es2015
+
+ADD package.json /app
+
 RUN npm install
 
-CMD ["npm", "start"]
+RUN apt update && apt install tesseract-ocr imagemagick ghostscript poppler-utils  -y
+
+CMD npm start
