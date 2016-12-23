@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');;
+var logger = require('morgan');
 var bodyParser = require('body-parser');
 var colors = require('colors');
 var fileUpload = require('express-fileupload');
@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
+    app.use(function (err, req, res) {
         console.log(err);
         res.status(err.status || 500);
         res.send(err);
@@ -47,7 +47,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     console.log(err);
     res.status(err.status || 500);
     res.send(err);

@@ -23,8 +23,6 @@ app.set('port', port);
 //var server = https.createServer(app);
 console.log('Server started on port '.gray + port.toString().yellow)
 
-
-
 var server = http.createServer(app);
 
 /**

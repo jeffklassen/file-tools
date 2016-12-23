@@ -1,8 +1,10 @@
 {
   "name": "file-tools-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
+    "docker": "docker-compose up -d",
+    "server": "node server/index",
     "start": "node index"
   },
   "dependencies": {
@@ -18,6 +20,7 @@
     "node-tesseract": "^0.2.7",
     "pdf-image": "^1.1.0",
     "promise": "^7.1.1",
+    "request": "^2.79.0",
     "serve-favicon": "^2.3.0",
     "underscore": "^1.8.3",
     "uuid": "^2.0.3"

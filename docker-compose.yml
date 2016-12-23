@@ -3,7 +3,7 @@ services:
     web:
         build:
             context: .
-        command: npm start
+        command: npm run server
         volumes: 
             - .:/app
             - /app/node_modules

@@ -13,4 +13,4 @@ RUN npm install
 
 RUN apt update && apt install tesseract-ocr imagemagick ghostscript poppler-utils  -y
 
-CMD npm start
+CMD npm run server
