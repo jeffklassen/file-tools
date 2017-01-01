@@ -16,6 +16,7 @@
     "express": "^4.14.0",
     "express-fileupload": "0.0.5",
     "glob": "^7.1.1",
+    "knwl.js": "^1.0.2",
     "morgan": "^1.7.0",
     "node-tesseract": "^0.2.7",
     "pdf-image": "^1.1.0",
